@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="report_title">学情报告</string>
+    <string name="report_error_message">似乎遇到了一些问题...</string>
     <string name="report_total_score_label">总分</string>
     <string name="report_overview_label">概览</string>
-    <string name="report_trend_label">趋势</string>
 </resources>

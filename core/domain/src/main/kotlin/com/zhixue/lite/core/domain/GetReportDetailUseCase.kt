@@ -3,6 +3,7 @@ package com.zhixue.lite.core.domain
 import com.zhixue.lite.core.data.repository.PaperRepository
 import com.zhixue.lite.core.model.FormatPaperInfo
 import com.zhixue.lite.core.model.ReportDetail
+import com.zhixue.lite.core.model.ScoreInfo
 import java.math.BigDecimal
 import javax.inject.Inject
 import kotlin.math.roundToInt
@@ -18,7 +19,7 @@ class GetReportDetailUseCase @Inject constructor(
         var totalUserScore = BigDecimal.ZERO
         var totalStandardScore = BigDecimal.ZERO
 
-        val overview = mutableListOf<FormatPaperInfo>()
+        val overviews = mutableListOf<FormatPaperInfo>()
 
         for (paperInfo in paperInfoList) {
             val paperId = paperInfo.id
@@ -39,7 +40,7 @@ class GetReportDetailUseCase @Inject constructor(
                 totalStandardScore += standardScore
             }
 
-            overview.add(
+            overviews.add(
                 FormatPaperInfo(
                     id = paperId,
                     subjectName = paperInfo.subjectName,
@@ -53,16 +54,13 @@ class GetReportDetailUseCase @Inject constructor(
             )
         }
 
-        val totalInfo = ReportDetail.TotalInfo(
+        val totalScoreInfo = ScoreInfo(
             userScore = totalUserScore.transformPlainString(),
             standardScore = totalStandardScore.transformPlainString(),
             scoreRate = totalUserScore.toFloat() / totalStandardScore.toFloat()
         )
 
-        return ReportDetail(
-            totalInfo = totalInfo,
-            overview = overview
-        )
+        return ReportDetail(totalScoreInfo, overviews)
     }
 }
 

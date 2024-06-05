@@ -41,7 +41,8 @@ class ReportViewModel @Inject constructor(
                 getReportDetailUseCase(reportId)
             }.onSuccess { reportDetail ->
                 uiState = ReportUiState.Success(reportDetail)
-            }.onFailure {
+            }.onFailure { throwable ->
+                throwable.printStackTrace()
                 uiState = ReportUiState.Failure
             }
         }
