@@ -39,8 +39,8 @@ fun ScorePanel(
                 color = Theme.colorScheme.onBackgroundVariant,
                 style = Theme.typography.titleMedium.copy(fontWeight = FontWeight.Medium),
                 modifier = Modifier
-                    .width(if (enabledPlaceholder) 48.dp else Dp.Unspecified)
                     .padding(vertical = 8.dp)
+                    .width(if (enabledPlaceholder) 48.dp else Dp.Unspecified)
                     .themePlaceholder(enabledPlaceholder)
             )
             Text(

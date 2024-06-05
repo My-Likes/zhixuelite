@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -18,6 +19,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.zhixue.lite.core.designsystem.component.Divider
@@ -163,6 +165,7 @@ internal fun OverviewPanel(
             style = Theme.typography.titleMedium.copy(fontWeight = FontWeight.Medium),
             modifier = Modifier
                 .padding(horizontal = 24.dp, vertical = 8.dp)
+                .width(if (enabledPlaceholder) 48.dp else Dp.Unspecified)
                 .themePlaceholder(enabledPlaceholder)
         )
         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
