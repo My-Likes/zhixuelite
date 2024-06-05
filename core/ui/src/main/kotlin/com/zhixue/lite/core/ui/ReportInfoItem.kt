@@ -38,8 +38,8 @@ fun ReportInfoItem(
                 color = Theme.colorScheme.onBackground,
                 style = Theme.typography.bodyMedium,
                 modifier = Modifier
-                    .padding(vertical = 4.dp)
                     .width(if (enabledPlaceholder) 168.dp else Dp.Unspecified)
+                    .padding(vertical = 4.dp)
                     .themePlaceholder(enabledPlaceholder)
             )
             Text(

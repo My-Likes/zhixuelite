@@ -1,5 +1,6 @@
 package com.zhixue.lite.core.ui
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -38,28 +39,33 @@ fun PaperInfoItem(
             modifier = Modifier.padding(vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = buildAnnotatedString {
-                    append(paperInfo?.subjectName)
-                    append(" ")
-                    withStyle(Theme.typography.bodySmall.toSpanStyle()) {
-                        append(paperInfo?.level)
-                    }
-                },
-                color = Theme.colorScheme.onBackground,
-                style = Theme.typography.bodyMedium,
-                modifier = Modifier
-                    .width(if (enabledPlaceholder) 128.dp else Dp.Unspecified)
-                    .themePlaceholder(enabledPlaceholder)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            TrendDirectionIcon(
-                trendDirection = paperInfo?.direction,
-                modifier = Modifier
-                    .size(12.dp)
-                    .themePlaceholder(enabledPlaceholder)
-            )
-            Spacer(modifier = Modifier.weight(1f))
+            Row(
+                modifier = Modifier.weight(1f),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = buildAnnotatedString {
+                        append(paperInfo?.subjectName)
+                        append(" ")
+                        withStyle(Theme.typography.bodySmall.toSpanStyle()) {
+                            append(paperInfo?.level)
+                        }
+                    },
+                    color = Theme.colorScheme.onBackground,
+                    style = Theme.typography.bodyMedium,
+                    modifier = Modifier
+                        .width(if (enabledPlaceholder) 128.dp else Dp.Unspecified)
+                        .themePlaceholder(enabledPlaceholder)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                TrendDirectionIcon(
+                    trendDirection = paperInfo?.direction,
+                    modifier = Modifier
+                        .size(12.dp)
+                        .themePlaceholder(enabledPlaceholder)
+                )
+            }
+            Spacer(modifier = Modifier.width(24.dp))
             Text(
                 text = "${paperInfo?.userScore} / ${paperInfo?.standardScore}",
                 color = Theme.colorScheme.onBackgroundVariant,
@@ -70,15 +76,17 @@ fun PaperInfoItem(
             )
         }
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                text = "班级排名：${paperInfo?.classRank}",
-                color = Theme.colorScheme.onBackgroundVariant,
-                style = Theme.typography.bodySmall.copy(fontWeight = FontWeight.Light),
-                modifier = Modifier
-                    .width(if (enabledPlaceholder) 64.dp else Dp.Unspecified)
-                    .themePlaceholder(enabledPlaceholder)
-            )
-            Spacer(modifier = Modifier.weight(1f))
+            Box(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = "班级排名：${paperInfo?.classRank}",
+                    color = Theme.colorScheme.onBackgroundVariant,
+                    style = Theme.typography.bodySmall.copy(fontWeight = FontWeight.Light),
+                    modifier = Modifier
+                        .width(if (enabledPlaceholder) 64.dp else Dp.Unspecified)
+                        .themePlaceholder(enabledPlaceholder)
+                )
+            }
+            Spacer(modifier = Modifier.width(24.dp))
             ProgressBar(
                 value = paperInfo?.scoreRate ?: 0f,
                 modifier = Modifier
@@ -111,6 +119,6 @@ private fun TrendDirectionIcon(
 @Composable
 private fun PaperInfoItemPreview() {
     ZhixueLiteTheme {
-        PaperInfoItem(enabledPlaceholder = true)
+        PaperInfoItem(enabledPlaceholder = false)
     }
 }
