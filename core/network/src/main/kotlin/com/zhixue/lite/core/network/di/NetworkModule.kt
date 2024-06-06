@@ -36,6 +36,7 @@ internal object NetworkModule {
         okHttpCallFactory: Lazy<Call.Factory>
     ): ImageLoader = ImageLoader.Builder(context)
         .callFactory { okHttpCallFactory.get() }
+        .crossfade(true)
         .respectCacheHeaders(false)
         .build()
 }
