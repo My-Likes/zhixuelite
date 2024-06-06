@@ -10,6 +10,7 @@ android {
 
 dependencies {
     implementation(projects.core.common)
+    implementation(libs.coil.kt)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.okhttp.core)
     implementation(libs.retrofit.core)
