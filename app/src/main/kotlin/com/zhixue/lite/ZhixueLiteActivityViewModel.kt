@@ -32,7 +32,6 @@ class ZhixueLiteActivityViewModel @Inject constructor(
         viewModelScope.launch {
             runCatching {
                 val grantTicket = userRepository.getGrantTicket()
-                check(grantTicket.isNotEmpty())
                 userRepository.userLogin(grantTicket)
             }.onSuccess {
                 loginState = LoginState.LoggedIn

@@ -2,7 +2,7 @@ package com.zhixue.lite.core.datastore.serializer
 
 import androidx.datastore.core.Serializer
 import com.zhixue.lite.core.common.json.PreferencesJson
-import com.zhixue.lite.core.datastore.model.UserPreferences
+import com.zhixue.lite.core.datastore.model.UserPreference
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
@@ -14,17 +14,17 @@ import javax.inject.Inject
 internal class UserPreferencesSerializer @Inject constructor(
     @PreferencesJson
     private val preferencesJson: Json
-) : Serializer<UserPreferences> {
+) : Serializer<List<UserPreference>> {
 
-    override val defaultValue: UserPreferences = UserPreferences()
+    override val defaultValue: List<UserPreference> = emptyList()
 
     @OptIn(ExperimentalSerializationApi::class)
-    override suspend fun readFrom(input: InputStream): UserPreferences {
+    override suspend fun readFrom(input: InputStream): List<UserPreference> {
         return preferencesJson.decodeFromStream(input)
     }
 
     @OptIn(ExperimentalSerializationApi::class)
-    override suspend fun writeTo(t: UserPreferences, output: OutputStream) {
+    override suspend fun writeTo(t: List<UserPreference>, output: OutputStream) {
         preferencesJson.encodeToStream(t, output)
     }
 }

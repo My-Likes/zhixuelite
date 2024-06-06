@@ -5,7 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.dataStoreFile
 import com.zhixue.lite.core.common.json.PreferencesJson
-import com.zhixue.lite.core.datastore.model.UserPreferences
+import com.zhixue.lite.core.datastore.model.UserPreference
 import com.zhixue.lite.core.datastore.serializer.UserPreferencesSerializer
 import dagger.Module
 import dagger.Provides
@@ -31,7 +31,7 @@ internal object DataStoreModule {
         @ApplicationContext
         context: Context,
         userPreferencesSerializer: UserPreferencesSerializer
-    ): DataStore<UserPreferences> = DataStoreFactory.create(
+    ): DataStore<List<UserPreference>> = DataStoreFactory.create(
         serializer = userPreferencesSerializer
     ) {
         context.dataStoreFile("user_preferences.json")
