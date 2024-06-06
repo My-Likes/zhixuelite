@@ -12,7 +12,7 @@ class PreferencesDataSource @Inject constructor(
 
     suspend fun setUserPreference(userPreference: UserPreference) {
         userPreferencesDataStore.updateData { preferences ->
-            (listOf(userPreference) + preferences).distinct()
+            (listOf(userPreference) + preferences).distinctBy { it.id }
         }
     }
 }
