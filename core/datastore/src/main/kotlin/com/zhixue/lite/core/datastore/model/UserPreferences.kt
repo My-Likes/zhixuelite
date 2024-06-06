@@ -5,7 +5,7 @@ import com.zhixue.lite.core.model.UserInfo
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class UserPreference(
+data class UserPreferences(
     val id: String = "",
     val avatar: String = "",
     val name: String = "",
@@ -14,7 +14,7 @@ data class UserPreference(
     val grantTicket: String = ""
 )
 
-fun UserPreference.asExternalModel(): UserData = UserData(
+fun UserPreferences.asExternalModel(): UserData = UserData(
     id = id,
     info = UserInfo(
         avatar = avatar,

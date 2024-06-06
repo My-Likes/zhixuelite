@@ -32,7 +32,8 @@ internal object NetworkModule {
     @Provides
     @Singleton
     fun providesImageLoader(
-        @ApplicationContext context: Context,
+        @ApplicationContext
+        context: Context,
         okHttpCallFactory: Lazy<Call.Factory>
     ): ImageLoader = ImageLoader.Builder(context)
         .callFactory { okHttpCallFactory.get() }

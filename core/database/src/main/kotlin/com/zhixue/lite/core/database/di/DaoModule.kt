@@ -5,6 +5,7 @@ import com.zhixue.lite.core.database.dao.PaperInfoDao
 import com.zhixue.lite.core.database.dao.RemotePageDao
 import com.zhixue.lite.core.database.dao.ReportInfoDao
 import com.zhixue.lite.core.database.dao.TrendInfoDao
+import com.zhixue.lite.core.database.dao.UserDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,6 +14,11 @@ import dagger.hilt.components.SingletonComponent
 @Module
 @InstallIn(SingletonComponent::class)
 internal object DaoModule {
+    @Provides
+    fun providesUserDao(
+        database: ZhixueLiteDatabase
+    ): UserDao = database.userDao()
+
     @Provides
     fun providesRemotePageDao(
         database: ZhixueLiteDatabase

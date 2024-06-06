@@ -1,7 +1,9 @@
 package com.zhixue.lite.core.data.repository
 
+import com.zhixue.lite.core.database.dao.UserDao
+import com.zhixue.lite.core.database.model.UserEntity
 import com.zhixue.lite.core.datastore.PreferencesDataSource
-import com.zhixue.lite.core.datastore.model.UserPreference
+import com.zhixue.lite.core.datastore.model.UserPreferences
 import com.zhixue.lite.core.datastore.model.asExternalModel
 import com.zhixue.lite.core.model.UserData
 import com.zhixue.lite.core.model.UserInfo
@@ -13,6 +15,7 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 internal class UserRepositoryImpl @Inject constructor(
+    private val userDao: UserDao,
     private val networkDataSource: NetworkDataSource,
     private val preferencesDataSource: PreferencesDataSource
 ) : UserRepository {
@@ -23,15 +26,8 @@ internal class UserRepositoryImpl @Inject constructor(
     override var token: String = ""
         private set
 
-    private val userDataList: Flow<List<UserData>> = preferencesDataSource.userPreferences
-        .map { userPreferences ->
-            userPreferences.map { it.asExternalModel() }
-        }
-
-    private val currentUserData: Flow<UserData> = userDataList
-        .map { userDataList ->
-            userDataList.first()
-        }
+    private val currentUserData: Flow<UserData> = preferencesDataSource.userPreferences
+        .map(UserPreferences::asExternalModel)
 
     override suspend fun userLogin(username: String, password: String, captcha: String) {
         handleLogin(networkDataSource.ssoLogin(username, password, captcha))
@@ -75,8 +71,18 @@ internal class UserRepositoryImpl @Inject constructor(
         this.userId = currentUserId
         this.token = token
 
-        preferencesDataSource.setUserPreference(
-            UserPreference(
+        userDao.insertUser(
+            UserEntity(
+                id = currentUserId,
+                avatar = userInfo.avatar.orEmpty(),
+                name = userInfo.name,
+                className = classInfo.name,
+                schoolName = userInfo.schoolInfo?.name.orEmpty(),
+                grantTicket = ssoInfo.grantTicket
+            )
+        )
+        preferencesDataSource.setUserPreferences(
+            UserPreferences(
                 id = currentUserId,
                 avatar = userInfo.avatar.orEmpty(),
                 name = userInfo.name,
