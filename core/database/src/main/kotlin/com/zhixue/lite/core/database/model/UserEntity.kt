@@ -2,7 +2,6 @@ package com.zhixue.lite.core.database.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import com.zhixue.lite.core.model.UserData
 import com.zhixue.lite.core.model.UserInfo
 
 @Entity(
@@ -24,13 +23,11 @@ data class UserEntity(
     val grantTicket: String
 )
 
-fun UserEntity.asExternalModel(): UserData = UserData(
+fun UserEntity.asExternalModel(): UserInfo = UserInfo(
     id = id,
-    info = UserInfo(
-        avatar = avatar,
-        name = name,
-        className = className,
-        schoolName = schoolName
-    ),
+    name = name,
+    avatar = avatar,
+    className = className,
+    schoolName = schoolName,
     grantTicket = grantTicket
 )

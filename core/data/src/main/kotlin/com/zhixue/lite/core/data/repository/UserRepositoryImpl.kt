@@ -42,7 +42,7 @@ internal class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getGrantTicket(): String {
-        return currentUserData.first().grantTicket
+        return currentUserData.first().info.grantTicket
     }
 
     private suspend fun handleLogin(ssoInfo: NetworkSsoInfo) {
@@ -60,7 +60,7 @@ internal class UserRepositoryImpl @Inject constructor(
                 casInfo.children
                     ?.find { it.id == currentUserId }
                     ?.let { it.userInfo to it.classInfo }
-                    ?: error("请确认账号信息是否已绑定")
+                    ?: error("请确认是否已绑定学生账号")
             }
 
             else -> {
@@ -81,15 +81,13 @@ internal class UserRepositoryImpl @Inject constructor(
                 grantTicket = ssoInfo.grantTicket
             )
         )
-        preferencesDataSource.setUserPreferences(
-            UserPreferences(
-                id = currentUserId,
-                avatar = userInfo.avatar.orEmpty(),
-                name = userInfo.name,
-                className = classInfo.name,
-                schoolName = userInfo.schoolInfo?.name.orEmpty(),
-                grantTicket = ssoInfo.grantTicket
-            )
+        preferencesDataSource.setUserInfo(
+            id = currentUserId,
+            avatar = userInfo.avatar.orEmpty(),
+            name = userInfo.name,
+            className = classInfo.name,
+            schoolName = userInfo.schoolInfo?.name.orEmpty(),
+            grantTicket = ssoInfo.grantTicket
         )
     }
 }

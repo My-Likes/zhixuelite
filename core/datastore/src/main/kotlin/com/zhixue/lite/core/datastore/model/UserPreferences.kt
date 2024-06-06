@@ -15,12 +15,12 @@ data class UserPreferences(
 )
 
 fun UserPreferences.asExternalModel(): UserData = UserData(
-    id = id,
     info = UserInfo(
+        id = id,
         avatar = avatar,
         name = name,
         className = className,
-        schoolName = schoolName
-    ),
-    grantTicket = grantTicket
+        schoolName = schoolName,
+        grantTicket = grantTicket
+    )
 )
