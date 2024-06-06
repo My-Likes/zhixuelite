@@ -38,7 +38,7 @@ import com.zhixue.lite.core.common.R as commonR
 internal fun ReportRoute(
     viewModel: ReportViewModel = hiltViewModel(),
     onBackClick: () -> Unit,
-    onOverviewInfoClick: (String) -> Unit
+    onPaperInfoClick: (String) -> Unit
 ) {
     LaunchedEffect(Unit) {
         viewModel.initialize()
@@ -47,7 +47,7 @@ internal fun ReportRoute(
     ReportScreen(
         uiState = viewModel.uiState,
         onBackClick = onBackClick,
-        onPaperClick = onOverviewInfoClick
+        onPaperClick = onPaperInfoClick
     )
 }
 

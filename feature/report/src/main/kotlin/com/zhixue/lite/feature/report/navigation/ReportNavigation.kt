@@ -16,12 +16,12 @@ fun NavController.navigateToReport(reportId: String, navOptions: NavOptions? = n
 
 fun NavGraphBuilder.reportScreen(
     onBackClick: () -> Unit,
-    onOverviewInfoClick: (String) -> Unit
+    onPaperInfoClick: (String) -> Unit
 ) {
     composable<ReportRoute> {
         ReportRoute(
             onBackClick = onBackClick,
-            onOverviewInfoClick = onOverviewInfoClick
+            onPaperInfoClick = onPaperInfoClick
         )
     }
 }

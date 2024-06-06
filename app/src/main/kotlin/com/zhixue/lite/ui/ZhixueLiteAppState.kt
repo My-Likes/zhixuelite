@@ -38,9 +38,9 @@ class ZhixueLiteAppState(
 
     fun navigateToMain() {
         val navOptions = navOptions {
-            popUpTo(navController.graph.id) { inclusive = true }
             launchSingleTop = true
         }
+        navController.popBackStack()
         navController.navigateToMain(navOptions)
     }
 
@@ -49,5 +49,9 @@ class ZhixueLiteAppState(
             launchSingleTop = true
         }
         navController.navigateToReport(reportId, navOptions)
+    }
+
+    fun popBackStack() {
+        navController.popBackStack()
     }
 }

@@ -32,8 +32,8 @@ fun ZhixueLiteNavHost(
         )
         mainScreen(onReportInfoClick = appState::navigateToReportDetail)
         reportScreen(
-            onBackClick = {},
-            onOverviewInfoClick = {}
+            onBackClick = appState::popBackStack,
+            onPaperInfoClick = {}
         )
     }
 }
