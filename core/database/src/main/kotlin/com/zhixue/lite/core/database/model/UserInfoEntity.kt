@@ -5,10 +5,10 @@ import androidx.room.Entity
 import com.zhixue.lite.core.model.UserInfo
 
 @Entity(
-    tableName = "user",
+    tableName = "user_info",
     primaryKeys = ["id"]
 )
-data class UserEntity(
+data class UserInfoEntity(
     @ColumnInfo(name = "id")
     val id: String,
     @ColumnInfo(name = "avatar")
@@ -23,7 +23,7 @@ data class UserEntity(
     val grantTicket: String
 )
 
-fun UserEntity.asExternalModel(): UserInfo = UserInfo(
+fun UserInfoEntity.asExternalModel(): UserInfo = UserInfo(
     id = id,
     avatar = avatar,
     name = name,

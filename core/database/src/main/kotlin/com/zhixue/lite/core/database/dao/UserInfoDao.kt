@@ -3,10 +3,10 @@ package com.zhixue.lite.core.database.dao
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
-import com.zhixue.lite.core.database.model.UserEntity
+import com.zhixue.lite.core.database.model.UserInfoEntity
 
 @Dao
-interface UserDao {
+interface UserInfoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertUser(entity: UserEntity)
+    suspend fun insertUserInfo(entity: UserInfoEntity)
 }

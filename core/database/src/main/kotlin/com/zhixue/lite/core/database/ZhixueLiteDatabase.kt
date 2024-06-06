@@ -6,17 +6,17 @@ import com.zhixue.lite.core.database.dao.PaperInfoDao
 import com.zhixue.lite.core.database.dao.RemotePageDao
 import com.zhixue.lite.core.database.dao.ReportInfoDao
 import com.zhixue.lite.core.database.dao.TrendInfoDao
-import com.zhixue.lite.core.database.dao.UserDao
+import com.zhixue.lite.core.database.dao.UserInfoDao
 import com.zhixue.lite.core.database.model.PaperInfoEntity
 import com.zhixue.lite.core.database.model.RemotePageEntity
 import com.zhixue.lite.core.database.model.ReportInfoEntity
 import com.zhixue.lite.core.database.model.TrendInfoEntity
-import com.zhixue.lite.core.database.model.UserEntity
+import com.zhixue.lite.core.database.model.UserInfoEntity
 
 @Database(
     version = 1,
     entities = [
-        UserEntity::class,
+        UserInfoEntity::class,
         RemotePageEntity::class,
         ReportInfoEntity::class,
         PaperInfoEntity::class,
@@ -24,7 +24,7 @@ import com.zhixue.lite.core.database.model.UserEntity
     ]
 )
 internal abstract class ZhixueLiteDatabase : RoomDatabase() {
-    abstract fun userDao(): UserDao
+    abstract fun userInfoDao(): UserInfoDao
     abstract fun remotePageDao(): RemotePageDao
     abstract fun reportInfoDao(): ReportInfoDao
     abstract fun paperInfoDao(): PaperInfoDao

@@ -1,7 +1,7 @@
 package com.zhixue.lite.core.data.repository
 
-import com.zhixue.lite.core.database.dao.UserDao
-import com.zhixue.lite.core.database.model.UserEntity
+import com.zhixue.lite.core.database.dao.UserInfoDao
+import com.zhixue.lite.core.database.model.UserInfoEntity
 import com.zhixue.lite.core.datastore.PreferencesDataSource
 import com.zhixue.lite.core.datastore.model.UserPreferences
 import com.zhixue.lite.core.datastore.model.asExternalModel
@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 internal class UserRepositoryImpl @Inject constructor(
-    private val userDao: UserDao,
+    private val userInfoDao: UserInfoDao,
     private val networkDataSource: NetworkDataSource,
     private val preferencesDataSource: PreferencesDataSource
 ) : UserRepository {
@@ -46,8 +46,8 @@ internal class UserRepositoryImpl @Inject constructor(
         name: String, className: String, schoolName: String,
         grantTicket: String
     ) {
-        userDao.insertUser(
-            UserEntity(id, avatar, name, className, schoolName, grantTicket)
+        userInfoDao.insertUserInfo(
+            UserInfoEntity(id, avatar, name, className, schoolName, grantTicket)
         )
         preferencesDataSource.setUserInfo(
             id, avatar, name, className, schoolName, grantTicket
