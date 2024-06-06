@@ -25,8 +25,8 @@ data class UserEntity(
 
 fun UserEntity.asExternalModel(): UserInfo = UserInfo(
     id = id,
-    name = name,
     avatar = avatar,
+    name = name,
     className = className,
     schoolName = schoolName,
     grantTicket = grantTicket

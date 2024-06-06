@@ -11,18 +11,15 @@ class PreferencesDataSource @Inject constructor(
     val userPreferences: Flow<UserPreferences> = userPreferencesDataStore.data
 
     suspend fun setUserInfo(
-        id: String,
-        name: String,
-        avatar: String,
-        className: String,
-        schoolName: String,
+        id: String, avatar: String,
+        name: String, className: String, schoolName: String,
         grantTicket: String
     ) {
         userPreferencesDataStore.updateData {
             it.copy(
                 id = id,
-                name = name,
                 avatar = avatar,
+                name = name,
                 className = className,
                 schoolName = schoolName,
                 grantTicket = grantTicket

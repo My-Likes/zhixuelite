@@ -41,6 +41,19 @@ internal class UserRepositoryImpl @Inject constructor(
         return currentUserData.map { it.info }
     }
 
+    override suspend fun setUserInfo(
+        id: String, avatar: String,
+        name: String, className: String, schoolName: String,
+        grantTicket: String
+    ) {
+        userDao.insertUser(
+            UserEntity(id, avatar, name, className, schoolName, grantTicket)
+        )
+        preferencesDataSource.setUserInfo(
+            id, avatar, name, className, schoolName, grantTicket
+        )
+    }
+
     override suspend fun getGrantTicket(): String {
         return currentUserData.first().info.grantTicket
     }
@@ -71,20 +84,10 @@ internal class UserRepositoryImpl @Inject constructor(
         this.userId = currentUserId
         this.token = token
 
-        userDao.insertUser(
-            UserEntity(
-                id = currentUserId,
-                avatar = userInfo.avatar.orEmpty(),
-                name = userInfo.name,
-                className = classInfo.name,
-                schoolName = userInfo.schoolInfo?.name.orEmpty(),
-                grantTicket = ssoInfo.grantTicket
-            )
-        )
-        preferencesDataSource.setUserInfo(
+        setUserInfo(
             id = currentUserId,
-            avatar = userInfo.avatar.orEmpty(),
             name = userInfo.name,
+            avatar = userInfo.avatar.orEmpty(),
             className = classInfo.name,
             schoolName = userInfo.schoolInfo?.name.orEmpty(),
             grantTicket = ssoInfo.grantTicket

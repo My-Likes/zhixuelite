@@ -15,5 +15,11 @@ interface UserRepository {
 
     fun getUserInfo(): Flow<UserInfo>
 
+    suspend fun setUserInfo(
+        id: String, avatar: String,
+        name: String, className: String, schoolName: String,
+        grantTicket: String
+    )
+
     suspend fun getGrantTicket(): String
 }
