@@ -1,7 +1,7 @@
 package com.zhixue.lite.core.data.repository
 
 import com.zhixue.lite.core.datastore.PreferencesDataSource
-import com.zhixue.lite.core.datastore.model.UserPreferences
+import com.zhixue.lite.core.datastore.model.UserPreference
 import com.zhixue.lite.core.datastore.model.asExternalModel
 import com.zhixue.lite.core.model.UserData
 import com.zhixue.lite.core.model.UserInfo
@@ -17,14 +17,21 @@ internal class UserRepositoryImpl @Inject constructor(
     private val preferencesDataSource: PreferencesDataSource
 ) : UserRepository {
 
-    private val userDataFlow: Flow<UserData> = preferencesDataSource.userPreferences
-        .map(UserPreferences::asExternalModel)
-
     override var userId: String = ""
         private set
 
     override var token: String = ""
         private set
+
+    private val userDataList: Flow<List<UserData>> = preferencesDataSource.userPreferences
+        .map { userPreferences ->
+            userPreferences.map { it.asExternalModel() }
+        }
+
+    private val currentUserData: Flow<UserData> = userDataList
+        .map { userDataList ->
+            userDataList.first()
+        }
 
     override suspend fun userLogin(username: String, password: String, captcha: String) {
         handleLogin(networkDataSource.ssoLogin(username, password, captcha))
@@ -35,11 +42,11 @@ internal class UserRepositoryImpl @Inject constructor(
     }
 
     override fun getUserInfo(): Flow<UserInfo> {
-        return userDataFlow.map { it.info }
+        return currentUserData.map { it.info }
     }
 
     override suspend fun getGrantTicket(): String {
-        return userDataFlow.first().grantTicket
+        return currentUserData.first().grantTicket
     }
 
     private suspend fun handleLogin(ssoInfo: NetworkSsoInfo) {
@@ -48,24 +55,33 @@ internal class UserRepositoryImpl @Inject constructor(
         val token = casInfo.token
         val currentUserId = networkDataSource.getUserInfo(token).currentUserId
 
-        val (userInfo, classInfo) = if (casInfo.role == "student") {
-            casInfo.userInfo to casInfo.classInfo!!
-        } else {
-            casInfo.children!!
-                .find { it.id == currentUserId }!!
-                .let { it.userInfo to it.classInfo }
+        val (userInfo, classInfo) = when (casInfo.role) {
+            "student" -> {
+                casInfo.userInfo to casInfo.classInfo!!
+            }
+
+            "parent" -> {
+                casInfo.children
+                    ?.find { it.id == currentUserId }
+                    ?.let { it.userInfo to it.classInfo }
+                    ?: error("请确认账号信息是否已绑定")
+            }
+
+            else -> {
+                error("账号类型暂不支持")
+            }
         }
 
         this.userId = currentUserId
         this.token = token
 
-        preferencesDataSource.setUserPreferences(
-            UserPreferences(
+        preferencesDataSource.setUserPreference(
+            UserPreference(
                 id = currentUserId,
-                avatar = userInfo.avatar!!,
+                avatar = userInfo.avatar.orEmpty(),
                 name = userInfo.name,
                 className = classInfo.name,
-                schoolName = userInfo.schoolInfo!!.name,
+                schoolName = userInfo.schoolInfo?.name.orEmpty(),
                 grantTicket = ssoInfo.grantTicket
             )
         )
