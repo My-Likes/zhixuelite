@@ -1,5 +1,8 @@
 package com.zhixue.lite.core.data.repository
 
+import com.zhixue.lite.core.model.UserInfo
+import kotlinx.coroutines.flow.Flow
+
 interface UserRepository {
 
     val userId: String
@@ -9,6 +12,8 @@ interface UserRepository {
     suspend fun userLogin(username: String, password: String, captcha: String)
 
     suspend fun userLogin(grantTicket: String)
+
+    fun getUserInfo(): Flow<UserInfo>
 
     suspend fun getGrantTicket(): String
 }
