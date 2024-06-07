@@ -26,4 +26,17 @@ class PreferencesDataSource @Inject constructor(
             )
         }
     }
+
+    suspend fun clearUserInfo() {
+        userPreferencesDataStore.updateData {
+            it.copy(
+                id = "",
+                avatar = "",
+                name = "",
+                className = "",
+                schoolName = "",
+                grantTicket = ""
+            )
+        }
+    }
 }

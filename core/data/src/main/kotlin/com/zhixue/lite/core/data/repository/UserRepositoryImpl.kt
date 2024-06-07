@@ -37,6 +37,10 @@ internal class UserRepositoryImpl @Inject constructor(
         handleLogin(networkDataSource.ssoLogin(grantTicket))
     }
 
+    override suspend fun userLogout() {
+        preferencesDataSource.clearUserInfo()
+    }
+
     override fun getUserInfo(): Flow<UserInfo> {
         return currentUserData.map { it.info }
     }
@@ -55,7 +59,9 @@ internal class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getGrantTicket(): String {
-        return currentUserData.first().info.grantTicket
+        val grantTicket = currentUserData.first().info.grantTicket
+        check(grantTicket.isNotEmpty()) { "尚未登录" }
+        return grantTicket
     }
 
     private suspend fun handleLogin(ssoInfo: NetworkSsoInfo) {

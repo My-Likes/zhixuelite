@@ -13,6 +13,8 @@ interface UserRepository {
 
     suspend fun userLogin(grantTicket: String)
 
+    suspend fun userLogout()
+
     fun getUserInfo(): Flow<UserInfo>
 
     suspend fun setUserInfo(

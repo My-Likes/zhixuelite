@@ -34,18 +34,30 @@ import com.zhixue.lite.core.model.UserInfo
 import com.zhixue.lite.core.common.R as commonR
 
 @Composable
-internal fun ProfileRoute(viewModel: ProfileViewModel = hiltViewModel()) {
+internal fun ProfileRoute(
+    viewModel: ProfileViewModel = hiltViewModel(),
+    onLogoutClick: () -> Unit
+) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    ProfileScreen(uiState = uiState)
+    ProfileScreen(
+        uiState = uiState,
+        onLogoutClick = { viewModel.logout(onLogoutSuccess = onLogoutClick) }
+    )
 }
 
 @Composable
-internal fun ProfileScreen(uiState: ProfileUiState) {
+internal fun ProfileScreen(
+    uiState: ProfileUiState,
+    onLogoutClick: () -> Unit
+) {
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
         ProfileHeader()
-        ProfileContent(uiState = uiState)
+        ProfileContent(
+            uiState = uiState,
+            onLogoutClick = onLogoutClick
+        )
     }
 }
 
@@ -63,7 +75,10 @@ internal fun ProfileHeader() {
 }
 
 @Composable
-internal fun ProfileContent(uiState: ProfileUiState) {
+internal fun ProfileContent(
+    uiState: ProfileUiState,
+    onLogoutClick: () -> Unit
+) {
     if (uiState is ProfileUiState.Success) {
         Column(
             modifier = Modifier
@@ -74,7 +89,7 @@ internal fun ProfileContent(uiState: ProfileUiState) {
             Spacer(modifier = Modifier.height(8.dp))
             ProfilePanel(userInfo = uiState.userInfo)
             Divider()
-            SettingPanel()
+            SettingPanel(onLogoutClick = onLogoutClick)
         }
     }
 }
@@ -111,7 +126,9 @@ internal fun ProfilePanel(userInfo: UserInfo) {
 }
 
 @Composable
-internal fun SettingPanel() {
+internal fun SettingPanel(
+    onLogoutClick: () -> Unit
+) {
     Column(modifier = Modifier.padding(vertical = 16.dp)) {
         Text(
             text = stringResource(R.string.profile_account_label),
@@ -149,7 +166,7 @@ internal fun SettingPanel() {
         Divider(modifier = Modifier.padding(vertical = 8.dp))
         SettingItem(
             title = stringResource(R.string.profile_logout),
-            onClick = { /*TODO*/ },
+            onClick = onLogoutClick,
             color = Theme.colorScheme.error
         )
     }

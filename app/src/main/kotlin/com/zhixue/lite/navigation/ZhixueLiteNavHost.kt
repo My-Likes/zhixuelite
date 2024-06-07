@@ -30,7 +30,10 @@ fun ZhixueLiteNavHost(
             onRegisterClick = {},
             onForgetPasswordClick = {}
         )
-        mainScreen(onReportInfoClick = appState::navigateToReportDetail)
+        mainScreen(
+            onLogoutClick = appState::navigateToLogin,
+            onReportInfoClick = appState::navigateToReportDetail
+        )
         reportScreen(
             onBackClick = appState::popBackStack,
             onPaperInfoClick = {}

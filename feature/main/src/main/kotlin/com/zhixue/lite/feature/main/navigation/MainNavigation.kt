@@ -15,9 +15,13 @@ fun NavController.navigateToMain(navOptions: NavOptions? = null) {
 }
 
 fun NavGraphBuilder.mainScreen(
+    onLogoutClick: () -> Unit,
     onReportInfoClick: (String) -> Unit
 ) {
     composable<MainRoute> {
-        MainRoute(onReportInfoClick = onReportInfoClick)
+        MainRoute(
+            onLogoutClick = onLogoutClick,
+            onReportInfoClick = onReportInfoClick
+        )
     }
 }

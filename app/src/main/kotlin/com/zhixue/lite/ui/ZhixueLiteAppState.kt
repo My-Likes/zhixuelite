@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.zhixue.lite.LoginState
 import com.zhixue.lite.feature.login.navigation.LoginRoute
+import com.zhixue.lite.feature.login.navigation.navigateToLogin
 import com.zhixue.lite.feature.main.navigation.MainRoute
 import com.zhixue.lite.feature.main.navigation.navigateToMain
 import com.zhixue.lite.feature.report.navigation.navigateToReport
@@ -42,6 +43,16 @@ class ZhixueLiteAppState(
         }
         navController.popBackStack()
         navController.navigateToMain(navOptions)
+    }
+
+    fun navigateToLogin() {
+        val navOptions = navOptions {
+            popUpTo(navController.graph.id) {
+                inclusive = true
+            }
+            launchSingleTop = true
+        }
+        navController.navigateToLogin(navOptions)
     }
 
     fun navigateToReportDetail(reportId: String) {

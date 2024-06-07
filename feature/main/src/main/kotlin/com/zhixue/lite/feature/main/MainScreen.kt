@@ -24,11 +24,13 @@ import com.zhixue.lite.feature.profile.navigation.profileScreen
 
 @Composable
 internal fun MainRoute(
+    onLogoutClick: () -> Unit,
     onReportInfoClick: (String) -> Unit,
     mainState: MainState = rememberMainState()
 ) {
     MainScreen(
         mainState = mainState,
+        onLogoutClick = onLogoutClick,
         onReportInfoClick = onReportInfoClick
     )
 }
@@ -36,6 +38,7 @@ internal fun MainRoute(
 @Composable
 internal fun MainScreen(
     mainState: MainState,
+    onLogoutClick: () -> Unit,
     onReportInfoClick: (String) -> Unit
 ) {
     Column {
@@ -47,7 +50,7 @@ internal fun MainScreen(
             exitTransition = { ExitTransition.None }
         ) {
             homeScreen(onReportInfoClick = onReportInfoClick)
-            profileScreen()
+            profileScreen(onLogoutClick = onLogoutClick)
         }
         Divider()
         MainBottomBar(
