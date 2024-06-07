@@ -12,44 +12,36 @@ class GetReportDetailUseCase @Inject constructor(
     private val paperRepository: PaperRepository
 ) {
     suspend operator fun invoke(reportId: String): ReportDetail {
-        val paperInfoList = paperRepository.getPaperInfoList(reportId)
-
-        check(paperInfoList.isNotEmpty())
-
-        val overviews = mutableListOf<FormatPaperInfo>()
-
-        for (paperInfo in paperInfoList) {
-            var classRank = paperInfo.classRank
-            val classPercentile = paperInfo.classPercentile
-            val classTrendInfo = paperInfo.classTrendInfo
-
-            if (classRank == null && classPercentile != null && classTrendInfo != null) {
-                classRank = calculateRank(classTrendInfo.studentNumber, classPercentile)
-            }
-
-            overviews.add(
-                FormatPaperInfo(
-                    id = paperInfo.id,
-                    subjectName = paperInfo.subjectName,
-                    userScore = paperInfo.userScore?.toPlainString() ?: "-",
-                    standardScore = paperInfo.standardScore.toPlainString(),
-                    scoreRate = paperInfo.scoreRate,
-                    level = classTrendInfo?.level.orEmpty(),
-                    classRank = classRank?.toString() ?: "-",
-                    direction = classTrendInfo?.direction
-                )
-            )
-        }
-
         return ReportDetail(
             scoreInfo = reportRepository.getReportScoreInfo(reportId),
-            overviews = overviews
+            overviews = paperRepository.getPaperInfoList(reportId)
+                .map { paperInfo ->
+                    val classRank = paperInfo.classRank ?: calculateRank(
+                        studentNumber = paperInfo.classTrendInfo?.studentNumber,
+                        classPercentile = paperInfo.classPercentile
+                    )
+                    FormatPaperInfo(
+                        id = paperInfo.id,
+                        subjectName = paperInfo.subjectName,
+                        userScore = paperInfo.userScore?.toPlainString() ?: "-",
+                        standardScore = paperInfo.standardScore.toPlainString(),
+                        scoreRate = paperInfo.scoreRate,
+                        level = paperInfo.classTrendInfo?.level.orEmpty(),
+                        classRank = classRank?.toString() ?: "-",
+                        direction = paperInfo.classTrendInfo?.direction
+                    )
+                }
+                .also { check(it.isNotEmpty()) }
         )
     }
 }
 
-private fun calculateRank(studentNumber: Int, classPercentile: Double): Int {
-    return (studentNumber - (studentNumber - 1) * (100 - classPercentile) / 100).roundToInt()
+private fun calculateRank(studentNumber: Int?, classPercentile: Double?): Int? {
+    return if (studentNumber != null && classPercentile != null) {
+        (studentNumber - (studentNumber - 1) * (100 - classPercentile) / 100).roundToInt()
+    } else {
+        null
+    }
 }
 
 private fun Double.toPlainString(): String {
