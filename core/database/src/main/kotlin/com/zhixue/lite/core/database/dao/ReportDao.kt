@@ -6,11 +6,27 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.zhixue.lite.core.database.model.ReportInfoEntity
+import com.zhixue.lite.core.database.model.ReportScoreInfo
 
 @Dao
-interface ReportInfoDao {
+interface ReportDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertReportInfoList(entities: List<ReportInfoEntity>)
+
+    @Query(
+        """
+            SELECT 
+                SUM(user_score) AS user_score,
+                SUM(standard_score) AS standard_score,
+                ROUND(user_score / standard_score, 2) AS score_rate
+            FROM paper_info
+            WHERE 
+                user_id = :userId
+                AND report_id = :reportId
+                AND id NOT LIKE '%!%'
+        """
+    )
+    suspend fun getReportScoreInfo(userId: String, reportId: String): ReportScoreInfo
 
     @Query(
         """

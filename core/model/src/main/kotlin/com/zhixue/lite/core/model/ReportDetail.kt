@@ -1,6 +1,6 @@
 package com.zhixue.lite.core.model
 
 data class ReportDetail(
-    val totalScoreInfo: ScoreInfo,
+    val scoreInfo: ScoreInfo,
     val overviews: List<FormatPaperInfo>
 )

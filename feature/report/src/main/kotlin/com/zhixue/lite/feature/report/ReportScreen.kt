@@ -142,7 +142,7 @@ internal fun ReportDetailBody(
     ) {
         ScorePanel(
             label = stringResource(R.string.report_total_score_label),
-            scoreInfo = reportDetail.totalScoreInfo
+            scoreInfo = reportDetail.scoreInfo
         )
         Divider()
         OverviewPanel(

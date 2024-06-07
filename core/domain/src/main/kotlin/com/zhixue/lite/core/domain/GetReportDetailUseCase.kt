@@ -1,14 +1,14 @@
 package com.zhixue.lite.core.domain
 
 import com.zhixue.lite.core.data.repository.PaperRepository
+import com.zhixue.lite.core.data.repository.ReportRepository
 import com.zhixue.lite.core.model.FormatPaperInfo
 import com.zhixue.lite.core.model.ReportDetail
-import com.zhixue.lite.core.model.ScoreInfo
-import java.math.BigDecimal
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
 class GetReportDetailUseCase @Inject constructor(
+    private val reportRepository: ReportRepository,
     private val paperRepository: PaperRepository
 ) {
     suspend operator fun invoke(reportId: String): ReportDetail {
@@ -16,15 +16,9 @@ class GetReportDetailUseCase @Inject constructor(
 
         check(paperInfoList.isNotEmpty())
 
-        var totalUserScore = BigDecimal.ZERO
-        var totalStandardScore = BigDecimal.ZERO
-
         val overviews = mutableListOf<FormatPaperInfo>()
 
         for (paperInfo in paperInfoList) {
-            val paperId = paperInfo.id
-            val userScore = paperInfo.userScore?.toBigDecimal()
-            val standardScore = paperInfo.standardScore.toBigDecimal()
             var classRank = paperInfo.classRank
             val classPercentile = paperInfo.classPercentile
             val classTrendInfo = paperInfo.classTrendInfo
@@ -33,19 +27,12 @@ class GetReportDetailUseCase @Inject constructor(
                 classRank = calculateRank(classTrendInfo.studentNumber, classPercentile)
             }
 
-            if (!paperId.contains("!")) {
-                if (userScore != null) {
-                    totalUserScore += userScore
-                }
-                totalStandardScore += standardScore
-            }
-
             overviews.add(
                 FormatPaperInfo(
-                    id = paperId,
+                    id = paperInfo.id,
                     subjectName = paperInfo.subjectName,
-                    userScore = userScore?.transformPlainString() ?: "-",
-                    standardScore = standardScore.transformPlainString(),
+                    userScore = paperInfo.userScore?.toPlainString() ?: "-",
+                    standardScore = paperInfo.standardScore.toPlainString(),
                     scoreRate = paperInfo.scoreRate,
                     level = classTrendInfo?.level.orEmpty(),
                     classRank = classRank?.toString() ?: "-",
@@ -54,13 +41,10 @@ class GetReportDetailUseCase @Inject constructor(
             )
         }
 
-        val totalScoreInfo = ScoreInfo(
-            userScore = totalUserScore.transformPlainString(),
-            standardScore = totalStandardScore.transformPlainString(),
-            scoreRate = totalUserScore.toFloat() / totalStandardScore.toFloat()
+        return ReportDetail(
+            scoreInfo = reportRepository.getReportScoreInfo(reportId),
+            overviews = overviews
         )
-
-        return ReportDetail(totalScoreInfo, overviews)
     }
 }
 
@@ -68,6 +52,6 @@ private fun calculateRank(studentNumber: Int, classPercentile: Double): Int {
     return (studentNumber - (studentNumber - 1) * (100 - classPercentile) / 100).roundToInt()
 }
 
-private fun BigDecimal.transformPlainString(): String {
-    return stripTrailingZeros().toPlainString()
+private fun Double.toPlainString(): String {
+    return toBigDecimal().stripTrailingZeros().toPlainString()
 }

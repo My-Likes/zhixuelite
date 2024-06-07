@@ -6,7 +6,7 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import com.zhixue.lite.core.data.model.asEntity
 import com.zhixue.lite.core.database.dao.RemotePageDao
-import com.zhixue.lite.core.database.dao.ReportInfoDao
+import com.zhixue.lite.core.database.dao.ReportDao
 import com.zhixue.lite.core.database.model.RemotePageEntity
 import com.zhixue.lite.core.database.model.ReportInfoEntity
 import com.zhixue.lite.core.network.NetworkDataSource
@@ -19,14 +19,14 @@ internal class ReportInfoRemoteMediator(
     private val reportType: String,
     private val userRepository: UserRepository,
     private val remotePageDao: RemotePageDao,
-    private val reportInfoDao: ReportInfoDao,
+    private val reportDao: ReportDao,
     private val networkDataSource: NetworkDataSource
 ) : RemoteMediator<Int, ReportInfoEntity>() {
 
     override suspend fun initialize(): InitializeAction {
         return try {
             val localLatestId =
-                reportInfoDao.getReportInfoLatestId(userRepository.userId, reportType)
+                reportDao.getReportInfoLatestId(userRepository.userId, reportType)
             val networkLatestId = networkDataSource.getReportInfoPage(
                 reportType, STARTING_PAGE, userRepository.token
             ).reportInfoList.first().id
@@ -66,13 +66,13 @@ internal class ReportInfoRemoteMediator(
             // 刷新时，删除之前缓存
             if (loadType == LoadType.REFRESH) {
                 remotePageDao.deleteRemotePage(userRepository.userId, label)
-                reportInfoDao.deleteReportInfoList(userRepository.userId, reportType)
+                reportDao.deleteReportInfoList(userRepository.userId, reportType)
             }
             // 插入新的数据
             remotePageDao.insertRemotePage(
                 RemotePageEntity(userRepository.userId, label, nextPage = loadPage + 1)
             )
-            reportInfoDao.insertReportInfoList(
+            reportDao.insertReportInfoList(
                 networkReportInfoPage.reportInfoList.map {
                     it.asEntity(userRepository.userId, reportType)
                 }
